@@ -1,70 +1,115 @@
-# 🚀 Frame Generator Pro v1.0
+# 🎮 Turing Software Frame Generation
 
-**Desarrollador:** LexusYTG  
-**Licencia:** GNU AGPLv3  
-**Base técnica:** Java 7 para Android  
-**Repositorio:** [github.com/LexusYTG/TSFG](https://github.com/LexusYTG/TSFG)  
+**Frame Generation para Android pensado para gaming móvil.**
 
-Esta app es una herramienta simple para escalar y generar frames en pantalla en dispositivos Android. No es mágica, solo optimiza lo que ya tienes.
+**Turing Software Frame Generation** es una herramienta diseñada para **mejorar la fluidez visual en juegos** mediante **generación e interpolación de fotogramas**.
 
-## 🔍 ¿Qué hace?
-- Captura la pantalla a baja resolución.  
-- Escala los frames a resolución completa.  
-- Genera frames intermedios para multiplicar FPS (hasta 5x).  
-- Muestra todo en un overlay opaco para un renderizado fluido.  
-- Ajusta calidad de color y modos para balancear rendimiento vs. visuales.
+El sistema crea **frames intermedios** usando **algoritmos matemáticos** y métodos de **inteligencia artificial**, permitiendo suavizar el movimiento incluso en dispositivos con menor potencia.
 
-## 🛠️ ¿Cómo lo logra?
-- Usa MediaProjection para capturar pantalla.  
-- Escala con nearest-neighbor rápido (sin filtros fancy).  
-- Genera frames con algoritmos propietarios: SIFg v1.0 (de un solo frame, sin ghosting) y v1.1 (interpolación rápida, anti-stutter).  
-- Renderiza en SurfaceView con buffers directos para baja latencia.  
-- Maneja batería baja cambiando a modo rendimiento.
+💡 Proyecto **100% gratuito**, **open source** y desarrollado por **Turing Software 🇦🇷**
 
-## ⚡ ¿Por qué funciona?
-- Reduce carga capturando a 25-75% de resolución original.  
-- Genera frames extras basados en movimiento simple, no AI pesada.  
-- Overlay hardware-accelerado evita lags del sistema.  
-- Optimizaciones en threads y buffers mantienen FPS estables en hardware modesto.
+---
 
-## 🔄 ¿Cómo funciona?
-1. Inicia la app y concede permisos (captura y overlay).  
-2. Elige modo: Rendimiento (directo) o SIFg (generación).  
-3. Configura resolución, frames a generar (1-4) y calidad color (full, 8-bit, 256 colores).  
-4. Presiona "INICIAR CAPTURA": esconde UI y muestra overlay.  
-5. Detén con back o notificación. Monitorea FPS/drops en tiempo real.
+# 🇪🇸 Español
 
-## 📝 Recomendaciones de uso
-- Usa en dispositivos mid-range o low-end para juegos.  
-- Empieza con resolución 50% y 1 frame generado.  
-- Monitorea batería: activa modo rendimiento si baja a <15%.  
-- Reinicia app si errores de captura (raro, pero pasa).  
-- Prueba en orientación portrait/landscape; ajusta auto.
+## ✨ Características
 
-## ✅ Casos donde puede ayudar
-- Juegos con FPS bajos: multiplica frames para smoother gameplay.  
-- Apps con stutter (scrolling, videos): reduce lags interpolando.  
-- Dispositivos viejos: baja resolución libera CPU/GPU.  
-- Modo retro: 8-bit/256 colores para estética vintage en emuladores.
+- ⚡ **Generación de fotogramas en tiempo real**
+- 🧠 Interpolación mediante **algoritmos matemáticos**
+- 🤖 Soporte experimental para **interpolación con IA**
+- 🧩 **Arquitectura modular**
+- 🎮 Optimizado para **gaming en Android**
+- 👤 Interfaz simple orientada al **usuario casual**
+- 🆓 **100% gratuito y open source**
 
-## ❌ Casos donde no
-- Hardware top-tier: no notarás diferencia, quizás overhead extra.  
-- Apps con input preciso (e.g., shooters): overlay no touchable, usa con cuidado.  
-- Batería crítica: generación consume más, mejor apagar.  
-- Contenido estático (e.g., lectura): generación innecesaria, usa modo básico.
+---
 
-## 🎯 Cosas que puede hacer
-- Multiplicar FPS reales hasta 5x sin ghosting.  
-- Reducir calidad color para más velocidad.  
-- Mostrar stats en vivo (FPS, frames, drops).  
-- Auto-ajustar por batería o rotación.  
-- Funcionar en background con notificación.
+## ⚙️ Especificaciones Técnicas
 
-## 🚫 Cosas que no puede hacer
-- No genera frames perfectos: interpolación simple, no maneja escenas complejas.  
-- No soporta multitarea real (overlay cubre todo).  
-- No instala mods o hacks: solo overlay sobre pantalla.  
-- No graba video: solo renderiza en vivo.  
-- No funciona sin permisos o en Android <7 (API checks incluidos).
+| Tecnología | Detalle |
+|------------|--------|
+| Lenguaje | **Java 7** |
+| Plataforma | **Android** |
+| Compatibilidad mínima | **Android 5.0 (Lollipop)** |
+| Arquitectura | **Modular** |
 
-Si rompes algo, es bajo AGPLv3: contribuye o fork. ¡Prueba y ajusta! 💥
+---
+
+## 🤝 Contribuciones
+
+Las contribuciones son bienvenidas.
+
+Puedes ayudar con:
+
+- 🚀 mejoras de rendimiento  
+- 🧠 nuevos algoritmos de interpolación  
+- 📱 optimización para dispositivos móviles  
+- 🐞 reportes de bugs  
+
+**Forks y Pull Requests son bienvenidos.**
+
+---
+
+## 📜 Licencia
+
+Proyecto **libre y de código abierto**.
+
+---
+
+## 👨‍💻 Autor
+
+**© Turing Software / LexusYTG**  
+🇦🇷 Hecho en Argentina
+
+---
+
+# 🇬🇧 English
+
+## ✨ Features
+
+- ⚡ **Real-time frame generation**
+- 🧠 Image interpolation using **mathematical algorithms**
+- 🤖 Experimental **AI-based interpolation**
+- 🧩 **Modular architecture**
+- 🎮 Designed for **Android gaming**
+- 👤 Simple interface aimed at **casual users**
+- 🆓 **100% free and open source**
+
+---
+
+## ⚙️ Technical Specifications
+
+| Technology | Details |
+|------------|--------|
+| Language | **Java 7** |
+| Platform | **Android** |
+| Minimum Version | **Android 5.0 (Lollipop)** |
+| Architecture | **Modular** |
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome.
+
+You can help with:
+
+- 🚀 performance improvements  
+- 🧠 new interpolation algorithms  
+- 📱 mobile optimization  
+- 🐞 bug reports  
+
+**Forks and Pull Requests are welcome.**
+
+---
+
+## 📜 License
+
+Free and **open source project**.
+
+---
+
+## 👨‍💻 Author
+
+**© Turing Software / LexusYTG**  
+🇦🇷 Made in Argentina
