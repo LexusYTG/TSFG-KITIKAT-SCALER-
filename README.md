@@ -1,8 +1,10 @@
-# 🎮 Turing Software Frame Generation
+Turing Software presenta
+#KITIKAT-SCALER 
 
 **Frame Generation para Android pensado para gaming móvil.**
 
-**Turing Software Frame Generation** es una herramienta diseñada para **mejorar la fluidez visual en juegos** mediante **generación e interpolación de fotogramas**.
+**KITIKAT-SCALER** es una herramienta diseñada para **mejorar la fluidez visual en juegos** mediante **generación e interpolación de fotogramas**.
+se basa en TSFG versión 1.1
 
 El sistema crea **frames intermedios** usando **algoritmos matemáticos** y métodos de **inteligencia artificial**, permitiendo suavizar el movimiento incluso en dispositivos con menor potencia.
 
@@ -113,3 +115,5 @@ Free and **open source project**.
 
 **© Turing Software / LexusYTG**  
 🇦🇷 Made in Argentina
+
+😼😼😼
