@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    android:background="@drawable/bg_card"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="72.0dip">
+        <LinearLayout
+            android:id="@id/tile_calidad"
+            android:focusable="true"
+            android:clickable="true"
+            android:layout_width="0.0dip"
+            android:layout_weight="1.0"
+            style="@style/ConfigTile">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="CALIDAD"
+                style="@style/TileLabel" />
+            <TextView
+                android:id="@id/tv_calidad_val"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4.0dip"
+                style="@style/TileValue" />
+        </LinearLayout>
+        <View
+            style="@style/VDivider" />
+        <LinearLayout
+            android:id="@id/tile_accesibilidad"
+            android:focusable="true"
+            android:clickable="true"
+            android:layout_width="0.0dip"
+            android:layout_weight="1.0"
+            style="@style/ConfigTile">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="ACCESIBILIDAD"
+                style="@style/TileLabel" />
+            <TextView
+                android:id="@id/tv_accesibilidad_val"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4.0dip"
+                style="@style/TileValue" />
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        style="@style/HDivider" />
+    <LinearLayout
+        android:id="@id/tile_fps"
+        android:focusable="true"
+        android:clickable="true"
+        android:layout_width="fill_parent"
+        android:layout_height="72.0dip"
+        style="@style/ConfigTile">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="FPS TARGET"
+            style="@style/TileLabel" />
+        <TextView
+            android:id="@id/tv_fps_target_val"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4.0dip"
+            style="@style/TileValue" />
+    </LinearLayout>
+    <View
+        style="@style/HDivider" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@id/grid_sifg"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="#1affffff"
+            android:paddingLeft="12.0dip"
+            android:paddingRight="12.0dip"
+            android:layout_width="fill_parent"
+            android:layout_height="8.0dip">
+            <TextView
+                android:textSize="8.0sp"
+                android:textColor="#66ffffff"
+                android:gravity="center"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="SIFg"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="72.0dip">
+            <LinearLayout
+                android:id="@id/tile_sifg_frames"
+                android:focusable="true"
+                android:clickable="true"
+                android:layout_width="0.0dip"
+                android:layout_weight="1.0"
+                style="@style/ConfigTile">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="FRAMES"
+                    style="@style/TileLabel" />
+                <TextView
+                    android:id="@id/tv_sifg_frames_val"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4.0dip"
+                    style="@style/TileValue" />
+            </LinearLayout>
+            <View
+                style="@style/VDivider" />
+            <LinearLayout
+                android:id="@id/tile_sifg_region"
+                android:focusable="true"
+                android:clickable="true"
+                android:layout_width="0.0dip"
+                android:layout_weight="1.0"
+                style="@style/ConfigTile">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="REGIÓN"
+                    style="@style/TileLabel" />
+                <TextView
+                    android:id="@id/tv_sifg_region_val"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4.0dip"
+                    style="@style/TileValue" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@id/grid_asifg"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="#1affffff"
+            android:paddingLeft="12.0dip"
+            android:paddingRight="12.0dip"
+            android:layout_width="fill_parent"
+            android:layout_height="8.0dip">
+            <TextView
+                android:textSize="8.0sp"
+                android:textColor="#66ffffff"
+                android:gravity="center"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="ASIFg"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="72.0dip">
+            <LinearLayout
+                android:id="@id/tile_asifg_neurons"
+                android:focusable="true"
+                android:clickable="true"
+                android:layout_width="0.0dip"
+                android:layout_weight="1.0"
+                style="@style/ConfigTile">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="NEURONAS"
+                    style="@style/TileLabel" />
+                <TextView
+                    android:id="@id/tv_asifg_neurons_val"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4.0dip"
+                    style="@style/TileValue" />
+            </LinearLayout>
+            <View
+                style="@style/VDivider" />
+            <LinearLayout
+                android:id="@id/tile_asifg_threshold"
+                android:focusable="true"
+                android:clickable="true"
+                android:layout_width="0.0dip"
+                android:layout_weight="1.0"
+                style="@style/ConfigTile">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="UMBRAL"
+                    style="@style/TileLabel" />
+                <TextView
+                    android:id="@id/tv_asifg_threshold_val"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4.0dip"
+                    style="@style/TileValue" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@id/grid_gfal"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="#1affffff"
+            android:paddingLeft="12.0dip"
+            android:paddingRight="12.0dip"
+            android:layout_width="fill_parent"
+            android:layout_height="8.0dip">
+            <TextView
+                android:textSize="8.0sp"
+                android:textColor="#66ffffff"
+                android:gravity="center"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="GFaL"
+                android:fontFamily="monospace" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="72.0dip">
+            <LinearLayout
+                android:id="@id/tile_gfal_lines_largo"
+                android:focusable="true"
+                android:clickable="true"
+                android:layout_width="0.0dip"
+                android:layout_weight="1.0"
+                style="@style/ConfigTile">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LARGO"
+                    style="@style/TileLabel" />
+                <TextView
+                    android:id="@id/tv_gfal_lines_largo_val"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4.0dip"
+                    style="@style/TileValue" />
+            </LinearLayout>
+            <View
+                style="@style/VDivider" />
+            <LinearLayout
+                android:id="@id/tile_gfal_lines_ancho"
+                android:focusable="true"
+                android:clickable="true"
+                android:layout_width="0.0dip"
+                android:layout_weight="1.0"
+                style="@style/ConfigTile">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ANCHO"
+                    style="@style/TileLabel" />
+                <TextView
+                    android:id="@id/tv_gfal_lines_ancho_val"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4.0dip"
+                    style="@style/TileValue" />
+            </LinearLayout>
+            <View
+                style="@style/VDivider" />
+            <LinearLayout
+                android:id="@id/tile_gfal_grid"
+                android:focusable="true"
+                android:clickable="true"
+                android:layout_width="0.0dip"
+                android:layout_weight="1.0"
+                style="@style/ConfigTile">
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="GRILLA"
+                    style="@style/TileLabel" />
+                <TextView
+                    android:id="@id/tv_gfal_grid_val"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4.0dip"
+                    style="@style/TileValue" />
+            </LinearLayout>
+        </LinearLayout>
+        <View
+            style="@style/HDivider" />
+        <LinearLayout
+            android:id="@id/tile_gfal_radius"
+            android:focusable="true"
+            android:clickable="true"
+            android:layout_width="fill_parent"
+            android:layout_height="72.0dip"
+            style="@style/ConfigTile">
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="RADIO BÚSQUEDA"
+                style="@style/TileLabel" />
+            <TextView
+                android:id="@id/tv_gfal_radius_val"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4.0dip"
+                style="@style/TileValue" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

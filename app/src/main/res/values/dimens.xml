@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Panel principal -->
+    <dimen name="panel_h_pad">20dp</dimen>
+    <dimen name="panel_v_pad">28dp</dimen>
+    <dimen name="panel_bottom_pad">40dp</dimen>
+
+    <!-- Cards -->
+    <dimen name="card_radius">16dp</dimen>
+    <dimen name="card_border">1dp</dimen>
+    <dimen name="card_pad">16dp</dimen>
+
+    <!-- Sección labels -->
+    <dimen name="section_margin_top">22dp</dimen>
+    <dimen name="section_margin_bottom">8dp</dimen>
+
+    <!-- Tiles de config -->
+    <dimen name="tile_height">72dp</dimen>
+    <dimen name="tile_pad">10dp</dimen>
+
+    <!-- Pills de modo -->
+    <dimen name="pill_height">44dp</dimen>
+    <dimen name="pill_margin">3dp</dimen>
+    <dimen name="pill_radius">12dp</dimen>
+
+    <!-- Pills CPU/GPU -->
+    <dimen name="pill_small_w">64dp</dimen>
+    <dimen name="pill_small_h">32dp</dimen>
+    <dimen name="pill_small_radius">10dp</dimen>
+
+    <!-- Botón start/stop -->
+    <dimen name="btn_height">56dp</dimen>
+    <dimen name="btn_radius">14dp</dimen>
+</resources>

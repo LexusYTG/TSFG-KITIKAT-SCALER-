@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Card de resolución: CAPTURA | SALIDA | ESCALA -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_card">
+
+    <!-- Columna CAPTURA -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CAPTURA"
+            android:textSize="8.5sp"
+            android:textColor="@color/c_txt_sec"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.14"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tv_src_res"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="13sp"
+            android:textColor="@color/c_txt_pri"
+            android:fontFamily="monospace"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <!-- Divisor -->
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/c_border" />
+
+    <!-- Columna SALIDA -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SALIDA"
+            android:textSize="8.5sp"
+            android:textColor="@color/c_txt_sec"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.14"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tv_dst_res"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="13sp"
+            android:textColor="@color/c_txt_pri"
+            android:fontFamily="monospace"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+    <!-- Divisor -->
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/c_border" />
+
+    <!-- Columna ESCALA -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ESCALA"
+            android:textSize="8.5sp"
+            android:textColor="@color/c_txt_sec"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.14"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/tv_scale"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="13sp"
+            android:textColor="@color/c_txt_pri"
+            android:fontFamily="monospace"
+            android:gravity="center" />
+
+    </LinearLayout>
+
+</LinearLayout>

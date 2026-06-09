@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Tema base de la app -->
+    <style name="AppTheme" parent="@android:style/Theme.Holo.Light.NoActionBar">
+        <item name="android:windowBackground">@color/c_bg</item>
+        <item name="android:statusBarColor">@color/c_bg</item>
+        <item name="android:navigationBarColor">@color/c_bg</item>
+    </style>
+
+    <!-- ══ Labels de sección ══════════════════════════════════════════════ -->
+    <style name="SectionLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">22dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginLeft">2dp</item>
+        <item name="android:textSize">9sp</item>
+        <item name="android:textColor">@color/c_txt_muted</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:letterSpacing">0.18</item>
+    </style>
+
+    <!-- ══ Tiles de configuración ════════════════════════════════════════ -->
+    <style name="ConfigTile">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
+    <style name="TileLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">8.5sp</item>
+        <item name="android:textColor">@color/c_txt_sec</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:letterSpacing">0.14</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="TileValue">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/c_txt_pri</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!-- ══ Divisores ══════════════════════════════════════════════════════ -->
+    <style name="HDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/c_border</item>
+    </style>
+
+    <style name="VDivider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/c_border</item>
+    </style>
+
+    <!-- ══ Pills de modo ══════════════════════════════════════════════════ -->
+    <style name="ModePill">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@color/c_txt_sec</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.04</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_pill_inactive</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+</resources>

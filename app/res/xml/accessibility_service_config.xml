@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<accessibility-service
+    android:description="@string/accessibility_service_description"
+    android:settingsActivity="com.TuringSoftware.FrameGenerator.MainActivity"
+    android:accessibilityEventTypes="typeAllMask"
+    android:packageNames="com.TurungSoftware.FrameGenerator"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:notificationTimeout="100"
+    android:accessibilityFlags="flagDefault|flagRequestFilterKeyEvents|flagRequestTouchExplorationMode"
+    android:canRetrieveWindowContent="true"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

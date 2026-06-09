@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Card de modo: pills RENDIMIENTO / SIFg / ASIFg + toggle CPU·GPU -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_card"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <!-- Fila de pills de modo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/pill_perf"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:text="RENDIMIENTO"
+            android:textSize="11sp"
+            android:textColor="@color/c_txt_sec"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.04"
+            android:gravity="center"
+            android:background="@drawable/bg_pill_inactive"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/pill_sifg"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:text="SIFg"
+            android:textSize="11sp"
+            android:textColor="@color/c_txt_sec"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.04"
+            android:gravity="center"
+            android:background="@drawable/bg_pill_inactive"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/pill_asifg"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:text="ASIFg  ★"
+            android:textSize="11sp"
+            android:textColor="@color/c_txt_sec"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.04"
+            android:gravity="center"
+            android:background="@drawable/bg_pill_inactive"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/pill_gfal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="3dp"
+            android:text="GFaL"
+            android:textSize="11sp"
+            android:textColor="@color/c_txt_sec"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.04"
+            android:gravity="center"
+            android:background="@drawable/bg_pill_inactive"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+    <!-- Divisor -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/c_border" />
+
+    <!-- Fila toggle CPU / GPU -->
+    <LinearLayout
+        android:id="@+id/gpu_toggle_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="ACELERACIÓN"
+            android:textSize="9sp"
+            android:textColor="@color/c_txt_muted"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.14" />
+
+        <TextView
+            android:id="@+id/pill_cpu"
+            android:layout_width="64dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:text="CPU"
+            android:textSize="11sp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:background="@drawable/bg_pill_perf_active"
+            android:textColor="@color/c_txt_pri"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/pill_gpu"
+            android:layout_width="64dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:text="GPU"
+            android:textSize="11sp"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:background="@drawable/bg_pill_inactive"
+            android:textColor="@color/c_txt_sec"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+</LinearLayout>

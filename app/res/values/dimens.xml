@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="panel_h_pad">20.0dip</dimen>
+    <dimen name="panel_v_pad">28.0dip</dimen>
+    <dimen name="panel_bottom_pad">40.0dip</dimen>
+    <dimen name="card_radius">16.0dip</dimen>
+    <dimen name="card_border">1.0dip</dimen>
+    <dimen name="card_pad">16.0dip</dimen>
+    <dimen name="section_margin_top">22.0dip</dimen>
+    <dimen name="section_margin_bottom">8.0dip</dimen>
+    <dimen name="tile_height">72.0dip</dimen>
+    <dimen name="tile_pad">10.0dip</dimen>
+    <dimen name="pill_height">44.0dip</dimen>
+    <dimen name="pill_margin">3.0dip</dimen>
+    <dimen name="pill_radius">12.0dip</dimen>
+    <dimen name="pill_small_w">64.0dip</dimen>
+    <dimen name="pill_small_h">32.0dip</dimen>
+    <dimen name="pill_small_radius">10.0dip</dimen>
+    <dimen name="btn_height">56.0dip</dimen>
+    <dimen name="btn_radius">14.0dip</dimen>
+</resources>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Card de métricas en vivo: gato ASCII + stats -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_card"
+    android:paddingTop="14dp"
+    android:paddingBottom="14dp">
+
+    <!-- Fila gato + stats -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Gato ASCII -->
+        <LinearLayout
+            android:id="@+id/cat_col"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="  /\\_____/\\"
+                android:fontFamily="monospace"
+                android:textSize="9sp"
+                android:textColor="@color/c_txt_sec"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/tv_cat_mood"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="( ●ω● )"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:textColor="@color/c_txt_pri"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="  )   (  "
+                android:fontFamily="monospace"
+                android:textSize="9sp"
+                android:textColor="@color/c_txt_sec"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" (_)━━(►)"
+                android:fontFamily="monospace"
+                android:textSize="9sp"
+                android:textColor="@color/c_txt_sec"
+                android:gravity="center" />
+
+        </LinearLayout>
+
+        <!-- Divisor vertical -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@color/c_border" />
+
+        <!-- Grid de métricas 2×2 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="12dp"
+            android:orientation="vertical">
+
+            <!-- Fila 1: FPS | Generados -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <include layout="@layout/metric_cell"
+                    android:id="@+id/cell_fps" />
+
+                <include layout="@layout/metric_cell"
+                    android:id="@+id/cell_frames" />
+
+            </LinearLayout>
+
+            <!-- Fila 2: Perdidos | Eficiencia -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="6dp">
+
+                <include layout="@layout/metric_cell"
+                    android:id="@+id/cell_dropped" />
+
+                <include layout="@layout/metric_cell"
+                    android:id="@+id/cell_efficiency" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Divisor -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/c_border" />
+
+    <!-- Sesión actual + generación info -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="SESIÓN"
+            android:textSize="8.5sp"
+            android:textColor="@color/c_txt_muted"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.12" />
+
+        <TextView
+            android:id="@+id/tv_session_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textSize="11sp"
+            android:textColor="@color/c_green"
+            android:fontFamily="monospace" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_generation_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textSize="10sp"
+        android:textColor="@color/c_txt_muted"
+        android:fontFamily="monospace" />
+
+</LinearLayout>

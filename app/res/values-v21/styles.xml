@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="@android:style/Theme.Material.Light" />
+    <style name="SectionLabel">
+        <item name="android:textSize">9.0sp</item>
+        <item name="android:textColor">@color/c_txt_muted</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">2.0dip</item>
+        <item name="android:layout_marginTop">22.0dip</item>
+        <item name="android:layout_marginBottom">8.0dip</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:letterSpacing">0.18</item>
+    </style>
+    <style name="TileLabel">
+        <item name="android:textSize">8.5sp</item>
+        <item name="android:textColor">@color/c_txt_sec</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:letterSpacing">0.14</item>
+    </style>
+    <style name="ModePill">
+        <item name="android:textSize">11.0sp</item>
+        <item name="android:textColor">@color/c_txt_sec</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_pill_inactive</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_margin">3.0dip</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+</resources>

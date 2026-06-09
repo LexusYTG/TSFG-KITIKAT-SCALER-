@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Celda de métrica reutilizable: label + valor -->
+<!-- Usar android:tag en el include para diferenciar las instancias,
+     y findViewById por ID después de inflate si se usa como ViewStub.
+     Al estar incluido en card_metrics, los IDs reales se asignan
+     desde MainActivity por posición. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp">
+
+    <TextView
+        android:id="@+id/tv_metric_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="8sp"
+        android:textColor="@color/c_txt_muted"
+        android:fontFamily="monospace"
+        android:letterSpacing="0.10" />
+
+    <TextView
+        android:id="@+id/tv_metric_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textSize="18sp"
+        android:fontFamily="monospace"
+        android:textColor="@color/c_txt_pri" />
+
+</LinearLayout>

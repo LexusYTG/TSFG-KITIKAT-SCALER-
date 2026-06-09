@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fondos -->
+    <color name="c_bg">#FF080C18</color>
+    <color name="c_surf">#FF0D1221</color>
+    <color name="c_border">#FF1C2A42</color>
+
+    <!-- Texto -->
+    <color name="c_txt_pri">#FFDDE6FF</color>
+    <color name="c_txt_sec">#FF4E6A8A</color>
+    <color name="c_txt_muted">#FF223048</color>
+
+    <!-- Acento RENDIMIENTO (azul) -->
+    <color name="c_perf">#FF3B8EFF</color>
+    <color name="c_perf_dim">#FF1A3A6A</color>
+
+    <!-- Acento SIFg (verde) -->
+    <color name="c_green">#FF00D08A</color>
+    <color name="c_green_dim">#FF0A3A28</color>
+
+    <!-- Acento ASIFg (violeta) -->
+    <color name="c_violet">#FF9B4EFF</color>
+    <color name="c_violet_dim">#FF28104A</color>
+
+    <!-- STOP (rojo) -->
+    <color name="c_stop">#FFFF3E5A</color>
+    <color name="c_stop_dim">#FF4A0A14</color>
+
+    <!-- GPU (naranja) -->
+    <color name="c_gpu">#FFFFB020</color>
+    <color name="c_gpu_dim">#FF3A2800</color>
+
+    <!-- Métricas -->
+    <color name="c_fps">#FF3B8EFF</color>
+    <color name="c_drop">#FFFF4455</color>
+    <color name="c_eff">#FFFFB020</color>
+
+    <!-- Transparente -->
+    <color name="c_transparent">#00000000</color>
+</resources>

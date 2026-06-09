@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">KITIKAT</string>
+    <string name="app_title">KITIKAT</string>
+    <string name="app_subtitle">SCALER  ·  v1.0  ·  TURING SOFTWARE</string>
+
+    <!-- Botones -->
+    <string name="btn_start">INICIAR CAPTURA</string>
+    <string name="btn_stop">DETENER CAPTURA</string>
+
+    <!-- Status -->
+    <string name="status_idle_perf">Modo Rendimiento — listo</string>
+    <string name="status_idle_sifg">Modo SIFg — listo</string>
+    <string name="status_idle_asifg">Modo ASIFg — listo</string>
+    <string name="status_capturing">Capturando…</string>
+    <string name="status_stopping">Deteniendo…</string>
+
+    <!-- Accessibility -->
+    <string name="accessibility_service_description">Permite transmitir toques a la pantalla real durante la captura de pantalla</string>
+
+    <!-- Permisos / toasts -->
+    <string name="toast_stopping">Deteniendo captura…</string>
+    <string name="toast_need_overlay">Se necesita permiso de superposición</string>
+    <string name="toast_need_accessibility">Habilitar el servicio de accesibilidad</string>
+    <string name="toast_touch_on">Touch forward activado</string>
+    <string name="toast_touch_off">Touch forward desactivado</string>
+
+    <!-- Sección labels -->
+    <string name="label_resolution">RESOLUCIÓN  ·  PANTALLA</string>
+    <string name="label_mode">MODO  DE  PROCESAMIENTO</string>
+    <string name="label_config">CONFIGURACIÓN</string>
+    <string name="label_metrics">MÉTRICAS  EN  VIVO</string>
+
+    <!-- Tiles config -->
+    <string name="tile_frames_gen">FRAMES GEN</string>
+    <string name="tile_color">COLOR</string>
+    <string name="tile_resolution">RESOLUCIÓN</string>
+    <string name="tile_fisheye">FISHEYE</string>
+    <string name="tile_touch">TOQUE FWD</string>
+    <string name="tile_capture">CAPTURA</string>
+    <string name="tile_fps_target">FPS TARGET</string>
+
+    <!-- Métricas -->
+    <string name="metric_fps">FPS</string>
+    <string name="metric_frames">GENERADOS</string>
+    <string name="metric_dropped">PERDIDOS</string>
+    <string name="metric_efficiency">EFICIENCIA</string>
+    <string name="metric_session">SESIÓN</string>
+
+    <!-- Diálogos -->
+    <string name="dialog_cancel">Cancelar</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_apply">Aplicar</string>
+</resources>

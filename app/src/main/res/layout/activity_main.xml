@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_bg"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/control_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/panel_h_pad"
+        android:paddingRight="@dimen/panel_h_pad"
+        android:paddingTop="@dimen/panel_v_pad"
+        android:paddingBottom="@dimen/panel_bottom_pad">
+
+        <!-- ══ HEADER ══ -->
+        <include layout="@layout/section_header" />
+
+        <!-- ══ RESOLUCIÓN ══ -->
+        <TextView
+            android:id="@+id/label_resolution"
+            style="@style/SectionLabel"
+            android:text="RESOLUCIÓN  ·  PANTALLA" />
+
+        <include layout="@layout/card_resolution" />
+
+        <!-- ══ MODO ══ -->
+        <TextView
+            android:id="@+id/label_mode"
+            style="@style/SectionLabel"
+            android:text="MODO  DE  PROCESAMIENTO" />
+
+        <include layout="@layout/card_mode" />
+
+        <!-- ══ STATUS ══ -->
+        <include layout="@layout/card_status" />
+
+        <!-- ══ CONFIGURACIÓN ══ -->
+        <TextView
+            android:id="@+id/label_config"
+            style="@style/SectionLabel"
+            android:text="CONFIGURACIÓN" />
+
+        <include layout="@layout/card_config" />
+
+        <!-- ══ MÉTRICAS ══ -->
+        <TextView
+            android:id="@+id/label_metrics"
+            style="@style/SectionLabel"
+            android:text="MÉTRICAS  EN  VIVO" />
+
+        <include layout="@layout/card_metrics" />
+
+        <!-- ══ BOTÓN START/STOP ══ -->
+        <Button
+            android:id="@+id/btn_start_stop"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/btn_height"
+            android:layout_marginTop="@dimen/section_margin_top"
+            android:text="@string/btn_start"
+            android:textSize="14sp"
+            android:textColor="@color/c_txt_pri"
+            android:letterSpacing="0.08"
+            android:background="@drawable/bg_btn_start"
+            android:stateListAnimator="@null" />
+
+    </LinearLayout>
+</ScrollView>

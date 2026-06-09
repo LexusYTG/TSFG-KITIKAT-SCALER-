@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Card de configuración rediseñada:
+     Fila 1: CALIDAD | ACCESIBILIDAD (siempre visible)
+     Fila 2: grid dinámico por modo (SIFG / ASIFG / GFAL / PERF)  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_card">
+
+    <!-- ── Fila 1: Calidad | Accesibilidad ─────────────────────────────── -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:orientation="horizontal">
+
+        <!-- CALIDAD (resolución + color) -->
+        <LinearLayout
+            android:id="@+id/tile_calidad"
+            style="@style/ConfigTile"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CALIDAD"
+                style="@style/TileLabel" />
+
+            <TextView
+                android:id="@+id/tv_calidad_val"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                style="@style/TileValue" />
+
+        </LinearLayout>
+
+        <View style="@style/VDivider" />
+
+        <!-- ACCESIBILIDAD (fisheye + toque fwd + modo captura) -->
+        <LinearLayout
+            android:id="@+id/tile_accesibilidad"
+            style="@style/ConfigTile"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ACCESIBILIDAD"
+                style="@style/TileLabel" />
+
+            <TextView
+                android:id="@+id/tv_accesibilidad_val"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                style="@style/TileValue" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View style="@style/HDivider" />
+
+    <!-- ── Fila 2: FPS Target (siempre visible) ─────────────────────────── -->
+    <LinearLayout
+        android:id="@+id/tile_fps"
+        style="@style/ConfigTile"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="FPS TARGET"
+            style="@style/TileLabel" />
+
+        <TextView
+            android:id="@+id/tv_fps_target_val"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            style="@style/TileValue" />
+
+    </LinearLayout>
+
+    <View style="@style/HDivider" />
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         Grid dinámico — cambia según modo seleccionado
+         ══════════════════════════════════════════════════════════════════════ -->
+
+    <!-- ── Grid SIFG (visible cuando modo = SIFG 1/1.1 / GPU) ───────────── -->
+    <LinearLayout
+        android:id="@+id/grid_sifg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:orientation="horizontal"
+            android:background="#1AFFFFFF"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SIFg"
+                android:textSize="8sp"
+                android:textColor="#66FFFFFF"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.14"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:orientation="horizontal">
+
+            <!-- Cantidad de puntos -->
+            <LinearLayout
+                android:id="@+id/tile_sifg_frames"
+                style="@style/ConfigTile"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="FRAMES"
+                    style="@style/TileLabel" />
+
+                <TextView
+                    android:id="@+id/tv_sifg_frames_val"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    style="@style/TileValue" />
+
+            </LinearLayout>
+
+            <View style="@style/VDivider" />
+
+            <!-- Alto / Ancho de la región de análisis -->
+            <LinearLayout
+                android:id="@+id/tile_sifg_region"
+                style="@style/ConfigTile"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="REGIÓN"
+                    style="@style/TileLabel" />
+
+                <TextView
+                    android:id="@+id/tv_sifg_region_val"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    style="@style/TileValue" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ── Grid ASIFG (visible cuando modo = ASIFG / ASIFG_GPU) ─────────── -->
+    <LinearLayout
+        android:id="@+id/grid_asifg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:orientation="horizontal"
+            android:background="#1AFFFFFF"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ASIFg"
+                android:textSize="8sp"
+                android:textColor="#66FFFFFF"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.14"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:orientation="horizontal">
+
+            <!-- Neuronas de la red -->
+            <LinearLayout
+                android:id="@+id/tile_asifg_neurons"
+                style="@style/ConfigTile"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="NEURONAS"
+                    style="@style/TileLabel" />
+
+                <TextView
+                    android:id="@+id/tv_asifg_neurons_val"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    style="@style/TileValue" />
+
+            </LinearLayout>
+
+            <View style="@style/VDivider" />
+
+            <!-- Umbral de activación -->
+            <LinearLayout
+                android:id="@+id/tile_asifg_threshold"
+                style="@style/ConfigTile"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="UMBRAL"
+                    style="@style/TileLabel" />
+
+                <TextView
+                    android:id="@+id/tv_asifg_threshold_val"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    style="@style/TileValue" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ── Grid GFAL (visible cuando modo = GFAL) ────────────────────────── -->
+    <LinearLayout
+        android:id="@+id/grid_gfal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:orientation="horizontal"
+            android:background="#1AFFFFFF"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="GFaL"
+                android:textSize="8sp"
+                android:textColor="#66FFFFFF"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.14"
+                android:gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:orientation="horizontal">
+
+            <!-- Líneas eje largo (vertical) -->
+            <LinearLayout
+                android:id="@+id/tile_gfal_lines_largo"
+                style="@style/ConfigTile"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="LARGO"
+                    style="@style/TileLabel" />
+
+                <TextView
+                    android:id="@+id/tv_gfal_lines_largo_val"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    style="@style/TileValue" />
+
+            </LinearLayout>
+
+            <View style="@style/VDivider" />
+
+            <!-- Líneas eje ancho (horizontal) -->
+            <LinearLayout
+                android:id="@+id/tile_gfal_lines_ancho"
+                style="@style/ConfigTile"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ANCHO"
+                    style="@style/TileLabel" />
+
+                <TextView
+                    android:id="@+id/tv_gfal_lines_ancho_val"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    style="@style/TileValue" />
+
+            </LinearLayout>
+
+            <View style="@style/VDivider" />
+
+            <!-- Grilla -->
+            <LinearLayout
+                android:id="@+id/tile_gfal_grid"
+                style="@style/ConfigTile"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="GRILLA"
+                    style="@style/TileLabel" />
+
+                <TextView
+                    android:id="@+id/tv_gfal_grid_val"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    style="@style/TileValue" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Fila 2 GFAL: radio de búsqueda (full width) -->
+        <View style="@style/HDivider" />
+
+        <LinearLayout
+            android:id="@+id/tile_gfal_radius"
+            style="@style/ConfigTile"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="RADIO BÚSQUEDA"
+                style="@style/TileLabel" />
+
+            <TextView
+                android:id="@+id/tv_gfal_radius_val"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                style="@style/TileValue" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
