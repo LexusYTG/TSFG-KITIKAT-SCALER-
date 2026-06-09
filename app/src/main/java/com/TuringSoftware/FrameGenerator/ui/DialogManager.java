@@ -30,14 +30,14 @@ public class DialogManager {
         new AlertDialog.Builder(act)
             .setTitle("Selecciona versión SIFg")
             .setItems(
-                new String[]{"v1.0 (Directo)", "v1.1 (Interpolado rápido)"},
-                new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface d, int which) {
-                        act.sifgVersion = which;
-                        act.prefs.edit().putInt(PREF_SIFG_VERSION, act.sifgVersion).apply();
-                        act.uiController.setMode(MODE_SIFG1);
-                    }
-                })
+            new String[]{"v1.0 (Directo)", "v1.1 (Interpolado rápido)"},
+            new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface d, int which) {
+                    act.sifgVersion = which;
+                    act.prefs.edit().putInt(PREF_SIFG_VERSION, act.sifgVersion).apply();
+                    act.uiController.setMode(MODE_SIFG1);
+                }
+            })
             .show();
     }
 
@@ -57,12 +57,12 @@ public class DialogManager {
         valueLabel.setPadding(0, 16, 0, 0);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override public void onProgressChanged(SeekBar sb, int p, boolean fromUser) {
-                valueLabel.setText(fisheyeLabel(p - 100));
-            }
-            @Override public void onStartTrackingTouch(SeekBar sb) {}
-            @Override public void onStopTrackingTouch(SeekBar sb)  {}
-        });
+                @Override public void onProgressChanged(SeekBar sb, int p, boolean fromUser) {
+                    valueLabel.setText(fisheyeLabel(p - 100));
+                }
+                @Override public void onStartTrackingTouch(SeekBar sb) {}
+                @Override public void onStopTrackingTouch(SeekBar sb)  {}
+            });
 
         layout.addView(seekBar);
         layout.addView(valueLabel);
@@ -98,23 +98,23 @@ public class DialogManager {
         new AlertDialog.Builder(act)
             .setTitle("Resolución de captura")
             .setItems(
-                new String[]{"25%  (Máx velocidad)", "50%  (Balance)", "75%  (Más calidad)"},
-                new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface d, int which) {
-                        float[] scales = {0.25f, 0.5f, 0.75f};
-                        act.resolutionScale = scales[which];
-                        act.prefs.edit().putFloat(PREF_RESOLUTION_SCALE, act.resolutionScale).apply();
-                        DisplayMetrics metrics = act.getRealMetrics();
-                        act.prefManager.adjustResolutions(act, metrics);
-                        act.uiController.updateResolutionText();
-                        if (act.captureService != null && act.isCapturing()) {
-                            act.captureService.updateResolution(
-                                act.getSourceWidth(), act.getSourceHeight(),
-                                act.getTargetWidth(), act.getTargetHeight());
-                            act.captureService.setResolutionScale(act.resolutionScale);
-                        }
+            new String[]{"25%  (Máx velocidad)", "50%  (Balance)", "75%  (Más calidad)"},
+            new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface d, int which) {
+                    float[] scales = {0.25f, 0.5f, 0.75f};
+                    act.resolutionScale = scales[which];
+                    act.prefs.edit().putFloat(PREF_RESOLUTION_SCALE, act.resolutionScale).apply();
+                    DisplayMetrics metrics = act.getRealMetrics();
+                    act.prefManager.adjustResolutions(act, metrics);
+                    act.uiController.updateResolutionText();
+                    if (act.captureService != null && act.isCapturing()) {
+                        act.captureService.updateResolution(
+                            act.getSourceWidth(), act.getSourceHeight(),
+                            act.getTargetWidth(), act.getTargetHeight());
+                        act.captureService.setResolutionScale(act.resolutionScale);
                     }
-                })
+                }
+            })
             .show();
     }
 
@@ -124,19 +124,19 @@ public class DialogManager {
         new AlertDialog.Builder(act)
             .setTitle("Frames a generar entre frames reales")
             .setItems(
-                new String[]{"1  (2× FPS)", "2  (3× FPS)", "3  (4× FPS)", "4  (5× FPS)"},
-                new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface d, int which) {
-                        int[] values = {1, 2, 3, 4};
-                        act.framesToGenerate = values[which];
-                        act.prefs.edit().putInt(PREF_FRAMES_TO_GENERATE, act.framesToGenerate).apply();
-                        TextView tv = act.getTvGenVal();
-                        if (tv != null) tv.setText(act.framesToGenerate + "× (×" + (act.framesToGenerate + 1) + " FPS)");
-                        if (act.captureService != null && act.isCapturing()) {
-                            act.captureService.setFramesToGenerate(act.framesToGenerate);
-                        }
+            new String[]{"1  (2× FPS)", "2  (3× FPS)", "3  (4× FPS)", "4  (5× FPS)"},
+            new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface d, int which) {
+                    int[] values = {1, 2, 3, 4};
+                    act.framesToGenerate = values[which];
+                    act.prefs.edit().putInt(PREF_FRAMES_TO_GENERATE, act.framesToGenerate).apply();
+                    TextView tv = act.getTvGenVal();
+                    if (tv != null) tv.setText(act.framesToGenerate + "× (×" + (act.framesToGenerate + 1) + " FPS)");
+                    if (act.captureService != null && act.isCapturing()) {
+                        act.captureService.setFramesToGenerate(act.framesToGenerate);
                     }
-                })
+                }
+            })
             .show();
     }
 
@@ -146,18 +146,18 @@ public class DialogManager {
         new AlertDialog.Builder(act)
             .setTitle("Calidad de color")
             .setItems(
-                new String[]{"RGB_565  (rápido)", "ARGB_8888  (completo)", "YUV  (mínimo)"},
-                new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface d, int which) {
-                        act.colorQuality = which;
-                        act.prefs.edit().putInt(PREF_COLOR_QUALITY, act.colorQuality).apply();
-                        TextView tv = act.getTvColorVal();
-                        if (tv != null) tv.setText(colorLabel(which));
-                        if (act.captureService != null && act.isCapturing()) {
-                            act.captureService.setColorQuality(act.colorQuality);
-                        }
+            new String[]{"RGB_565  (rápido)", "ARGB_8888  (completo)", "YUV  (mínimo)"},
+            new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface d, int which) {
+                    act.colorQuality = which;
+                    act.prefs.edit().putInt(PREF_COLOR_QUALITY, act.colorQuality).apply();
+                    TextView tv = act.getTvColorVal();
+                    if (tv != null) tv.setText(colorLabel(which));
+                    if (act.captureService != null && act.isCapturing()) {
+                        act.captureService.setColorQuality(act.colorQuality);
                     }
-                })
+                }
+            })
             .show();
     }
 
@@ -175,18 +175,18 @@ public class DialogManager {
         new AlertDialog.Builder(act)
             .setTitle("Reenvío de toques")
             .setItems(
-                new String[]{"Desactivado (recomendado)", "Activado (requiere accesibilidad)"},
-                new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface d, int which) {
-                        act.touchForwardEnabled = which == 1;
-                        act.prefs.edit().putBoolean(PREF_TOUCH_FORWARD, act.touchForwardEnabled).apply();
-                        TextView tv = act.getTvTouchVal();
-                        if (tv != null) tv.setText(act.touchForwardEnabled ? "ON" : "OFF");
-                        if (act.touchForwardEnabled && !PermissionHelper.isAccessibilityEnabled(act)) {
-                            PermissionHelper.requestAccessibility(act);
-                        }
+            new String[]{"Desactivado (recomendado)", "Activado (requiere accesibilidad)"},
+            new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface d, int which) {
+                    act.touchForwardEnabled = which == 1;
+                    act.prefs.edit().putBoolean(PREF_TOUCH_FORWARD, act.touchForwardEnabled).apply();
+                    TextView tv = act.getTvTouchVal();
+                    if (tv != null) tv.setText(act.touchForwardEnabled ? "ON" : "OFF");
+                    if (act.touchForwardEnabled && !PermissionHelper.isAccessibilityEnabled(act)) {
+                        PermissionHelper.requestAccessibility(act);
                     }
-                })
+                }
+            })
             .show();
     }
 
@@ -196,15 +196,16 @@ public class DialogManager {
         new AlertDialog.Builder(act)
             .setTitle("Modo de captura")
             .setItems(
-                new String[]{"Pantalla completa", "App específica (API 34+)"},
-                new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface d, int which) {
-                        act.captureMode = which;
-                        act.prefs.edit().putInt(PREF_CAPTURE_MODE, act.captureMode).apply();
-                        TextView tv = act.getTvCapModeVal();
-                        if (tv != null) tv.setText(which == CAPTURE_MODE_SINGLE_APP ? "APP" : "FULL");
-                    }
-                })
+            new String[]{"Pantalla completa", "App específica (API 34+)"},
+            new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface d, int which) {
+                    act.captureMode = which;
+                    act.prefs.edit().putInt(PREF_CAPTURE_MODE, act.captureMode).apply();
+                    TextView tv = act.getTvCapModeVal();
+                    if (tv != null) tv.setText(which == CAPTURE_MODE_SINGLE_APP ? "APP" : "FULL");
+                    if (act.captureService != null) act.captureService.setCaptureMode(which);
+                }
+            })
             .show();
     }
 
@@ -234,13 +235,13 @@ public class DialogManager {
         new AlertDialog.Builder(act)
             .setTitle("Calidad")
             .setItems(
-                new String[]{"Resolución de captura", "Calidad de color"},
-                new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface d, int which) {
-                        if (which == 0) showResolutionDialog();
-                        else            showColorQualityDialog();
-                    }
-                })
+            new String[]{"Resolución de captura", "Calidad de color"},
+            new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface d, int which) {
+                    if (which == 0) showResolutionDialog();
+                    else            showColorQualityDialog();
+                }
+            })
             .show();
     }
 
@@ -249,16 +250,16 @@ public class DialogManager {
         new AlertDialog.Builder(act)
             .setTitle("Accesibilidad")
             .setItems(
-                new String[]{"Corrección ojo de pez", "Reenvío de toques", "Modo de captura"},
-                new DialogInterface.OnClickListener() {
-                    @Override public void onClick(DialogInterface d, int which) {
-                        switch (which) {
-                            case 0: showFisheyeDialog();     break;
-                            case 1: showTouchForwardDialog(); break;
-                            case 2: showCaptureModeDialog();  break;
-                        }
+            new String[]{"Corrección ojo de pez", "Reenvío de toques", "Modo de captura"},
+            new DialogInterface.OnClickListener() {
+                @Override public void onClick(DialogInterface d, int which) {
+                    switch (which) {
+                        case 0: showFisheyeDialog();     break;
+                        case 1: showTouchForwardDialog(); break;
+                        case 2: showCaptureModeDialog();  break;
                     }
-                })
+                }
+            })
             .show();
     }
 
@@ -321,12 +322,12 @@ public class DialogManager {
         valueLabel.setPadding(0, 16, 0, 0);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override public void onProgressChanged(SeekBar sb, int p, boolean fromUser) {
-                valueLabel.setText("Umbral: " + p + "%");
-            }
-            @Override public void onStartTrackingTouch(SeekBar sb) {}
-            @Override public void onStopTrackingTouch(SeekBar sb)  {}
-        });
+                @Override public void onProgressChanged(SeekBar sb, int p, boolean fromUser) {
+                    valueLabel.setText("Umbral: " + p + "%");
+                }
+                @Override public void onStartTrackingTouch(SeekBar sb) {}
+                @Override public void onStopTrackingTouch(SeekBar sb)  {}
+            });
 
         layout.addView(seekBar);
         layout.addView(valueLabel);
@@ -437,12 +438,12 @@ public class DialogManager {
         valueLabel.setPadding(0, 16, 0, 0);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override public void onProgressChanged(SeekBar sb, int p, boolean fromUser) {
-                valueLabel.setText("Radio: " + (p + 4) + " px");
-            }
-            @Override public void onStartTrackingTouch(SeekBar sb) {}
-            @Override public void onStopTrackingTouch(SeekBar sb)  {}
-        });
+                @Override public void onProgressChanged(SeekBar sb, int p, boolean fromUser) {
+                    valueLabel.setText("Radio: " + (p + 4) + " px");
+                }
+                @Override public void onStartTrackingTouch(SeekBar sb) {}
+                @Override public void onStopTrackingTouch(SeekBar sb)  {}
+            });
 
         layout.addView(seekBar);
         layout.addView(valueLabel);
@@ -465,3 +466,4 @@ public class DialogManager {
             .show();
     }
 }
+

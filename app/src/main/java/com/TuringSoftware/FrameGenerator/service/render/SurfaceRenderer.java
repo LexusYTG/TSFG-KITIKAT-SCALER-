@@ -99,19 +99,8 @@ public class SurfaceRenderer {
 
     public void renderBitmap(Bitmap bmp) {
         if (bmp == null || bmp.isRecycled() || !isSurfaceValid) return;
-        android.graphics.Rect srcRect = null;
-        if (captureMode == CAPTURE_MODE_FULLSCREEN && (topInset > 0 || bottomInset > 0)) {
-            float scaleY   = (float) sourceHeight / targetHeight;
-            int cropTop    = (int)(topInset    * scaleY);
-            int cropBottom = sourceHeight - (int)(bottomInset * scaleY);
-            cropTop    = Math.max(0, Math.min(cropTop,    sourceHeight - 1));
-            cropBottom = Math.max(cropTop + 1, Math.min(cropBottom, sourceHeight));
-            if (cropTop > 0 || cropBottom < sourceHeight) {
-                srcRect = new android.graphics.Rect(0, cropTop, sourceWidth, cropBottom);
-            }
-        }
         android.graphics.Rect dstRect = ensureDstRect();
-        drawOnCanvas(bmp, srcRect, dstRect);
+        drawOnCanvas(bmp, null, dstRect);
     }
 
     // ── Helpers internos ───────────────────────────────────────────────────────
@@ -143,27 +132,13 @@ public class SurfaceRenderer {
     }
 
     private android.graphics.Rect buildSrcRect(int srcW, int srcH) {
-        if (captureMode == CAPTURE_MODE_FULLSCREEN && (topInset > 0 || bottomInset > 0)) {
-            if (cachedSrcRect != null && cachedSrcW == srcW && cachedSrcH == srcH
-                    && cachedTop == topInset && cachedBot == bottomInset) {
-                return cachedSrcRect;
-            }
-            float scaleY   = (float) srcH / targetHeight;
-            int cropTop    = Math.max(0, Math.min((int)(topInset    * scaleY), srcH - 1));
-            int cropBottom = Math.max(cropTop + 1, Math.min(srcH - (int)(bottomInset * scaleY), srcH));
-            if (cropTop > 0 || cropBottom < srcH) {
-                cachedSrcRect = new android.graphics.Rect(0, cropTop, srcW, cropBottom);
-                cachedSrcW = srcW; cachedSrcH = srcH; cachedTop = topInset; cachedBot = bottomInset;
-                return cachedSrcRect;
-            }
-        }
-        cachedSrcRect = null;
         return null;
     }
 
     private android.graphics.Rect ensureDstRect() {
-        if (cachedDstRect == null || cachedDstRect.right != targetWidth || cachedDstRect.bottom != targetHeight) {
-            cachedDstRect = new android.graphics.Rect(0, 0, targetWidth, targetHeight);
+        int dstH = targetHeight + bottomInset;
+        if (cachedDstRect == null || cachedDstRect.right != targetWidth || cachedDstRect.bottom != dstH) {
+            cachedDstRect = new android.graphics.Rect(0, 0, targetWidth, dstH);
         }
         return cachedDstRect;
     }
@@ -178,3 +153,4 @@ public class SurfaceRenderer {
         return bmp;
     }
 }
+

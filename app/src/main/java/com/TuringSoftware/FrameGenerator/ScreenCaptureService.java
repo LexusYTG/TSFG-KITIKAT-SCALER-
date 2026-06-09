@@ -39,6 +39,7 @@ import com.TuringSoftware.FrameGenerator.service.pipeline.RenderScriptPipeline;
 import com.TuringSoftware.FrameGenerator.service.processors.FrameUtils;
 import com.TuringSoftware.FrameGenerator.service.processors.GFaLFlowNet;
 import com.TuringSoftware.FrameGenerator.service.processors.StaticFrameDetector;
+import com.TuringSoftware.FrameGenerator.service.processors.TileFreezeDetector;
 import com.TuringSoftware.FrameGenerator.service.render.SurfaceRenderer;
 
 import static com.TuringSoftware.FrameGenerator.AppConstants.*;
@@ -159,6 +160,11 @@ public class ScreenCaptureService extends Service {
     private final float[] gfalFlowDy = new float[GFAL_TILE_COUNT];
     private boolean gfalSlotA = true;
 
+    // ── GFaL — Tile Freeze Detector ──────────────────────────────────────────
+    /** Congela tiles cuyo contenido no ha cambiado en los últimos N frames. */
+    private final TileFreezeDetector gfalFreezeDetector =
+    new TileFreezeDetector(GFAL_TILE_COUNT);
+
     // ── GFaL refinamiento neuronal ────────────────────────────────────────────
     private volatile boolean gfalNetEnabled = DEFAULT_GFAL_NET_ENABLED;
     private volatile float   gfalNetAlpha   = DEFAULT_GFAL_NET_ALPHA / 100f;
@@ -176,7 +182,7 @@ public class ScreenCaptureService extends Service {
     private boolean renderSrcSlotA = true;
 
     private final java.util.concurrent.atomic.AtomicInteger lockTicket =
-	new java.util.concurrent.atomic.AtomicInteger(0);
+    new java.util.concurrent.atomic.AtomicInteger(0);
 
     // ── Binder ────────────────────────────────────────────────────────────────
     private final IBinder binder = new LocalBinder();
@@ -297,6 +303,10 @@ public class ScreenCaptureService extends Service {
             surfaceRenderer.invalidateFisheyeCache();
         }
     }
+    public void setCaptureMode(int mode) {
+        captureMode = mode;
+        if (surfaceRenderer != null) surfaceRenderer.setCaptureMode(mode);
+    }
     public void setTouchForwardEnabled(boolean e) { touchForwardEnabled = e; }
     public void setTargetFps(int fps) {
         fps = Math.max(10, Math.min(240, fps));
@@ -317,7 +327,8 @@ public class ScreenCaptureService extends Service {
 
     public void startCapture(int resultCode, Intent data,
                              int srcW, int srcH, int tgtW, int tgtH,
-                             int dpi, int top, int bottom, int mode) {
+                             int dpi, int top, int bottom, int mode,
+                             int physW, int physH) {
         if (running) return;
         sourceWidth = srcW; sourceHeight = srcH;
         targetWidth = tgtW; targetHeight = tgtH;
@@ -339,15 +350,15 @@ public class ScreenCaptureService extends Service {
             rsPipeline.init(srcW, srcH, tgtW, tgtH);
         }
 
-        overlayWindow = new OverlayWindow(this, tgtW, tgtH, touchForwardEnabled);
+        overlayWindow = new OverlayWindow(this, physW, physH, touchForwardEnabled);
         overlayWindow.setListener(new OverlayWindow.SurfaceStateListener() {
-				@Override public void onSurfaceValid(SurfaceHolder h) {
-					if (surfaceRenderer != null) surfaceRenderer.setSurfaceView(overlayWindow.getSurfaceView(), true);
-				}
-				@Override public void onSurfaceInvalid() {
-					if (surfaceRenderer != null) surfaceRenderer.setSurfaceValid(false);
-				}
-			});
+                @Override public void onSurfaceValid(SurfaceHolder h) {
+                    if (surfaceRenderer != null) surfaceRenderer.setSurfaceView(overlayWindow.getSurfaceView(), true);
+                }
+                @Override public void onSurfaceInvalid() {
+                    if (surfaceRenderer != null) surfaceRenderer.setSurfaceValid(false);
+                }
+            });
         ensureOverlayOnMainThread();
 
         try {
@@ -403,7 +414,7 @@ public class ScreenCaptureService extends Service {
     }
 
     public void onOrientationChanged(int srcW, int srcH, int tgtW, int tgtH,
-                                     int dpi, int top, int bottom) {
+                                     int dpi, int top, int bottom, int physW, int physH) {
         sourceWidth = srcW; sourceHeight = srcH;
         targetWidth = tgtW; targetHeight = tgtH;
         topInset = top;     bottomInset  = bottom;
@@ -415,9 +426,12 @@ public class ScreenCaptureService extends Service {
         }
         if (virtualDisplay != null) try { virtualDisplay.resize(srcW, srcH, dpi); }
             catch (Exception e) { Log.e(TAG, "Error resizing VirtualDisplay", e); }
-        if (overlayWindow  != null) mainHandler.post(new Runnable() {
-					@Override public void run() { overlayWindow.resize(targetWidth, targetHeight); }
-				});
+        if (overlayWindow  != null) {
+            final int finalPhysW = physW, finalPhysH = physH;
+            mainHandler.post(new Runnable() {
+                    @Override public void run() { overlayWindow.resize(finalPhysW, finalPhysH); }
+                });
+        }
     }
 
     // ── Helpers de release ────────────────────────────────────────────────────
@@ -456,6 +470,7 @@ public class ScreenCaptureService extends Service {
 
     private void resetHashHistory() {
         staticDetector.reset();
+        gfalFreezeDetector.thawAll();
         sifgV10Dx = 0; sifgV10Dy = 0; sifgPrevDx = 0f; sifgPrevDy = 0f;
     }
 
@@ -500,14 +515,6 @@ public class ScreenCaptureService extends Service {
                 droppedFrames.incrementAndGet();
                 return;
             }
-            long nowNs = System.nanoTime();
-            if (nowNs < nextFrameDeadlineNs) {
-                Image img = reader.acquireLatestImage();
-                if (img != null) img.close();
-                droppedFrames.incrementAndGet();
-                return;
-            }
-            nextFrameDeadlineNs = nowNs + targetFrameNanos;
             Image image = null;
             try {
                 image = reader.acquireLatestImage();
@@ -516,7 +523,7 @@ public class ScreenCaptureService extends Service {
                 processingBusy = true;
                 if (useASIFg) {
                     if (asifgGpu && rsPipeline != null && rsPipeline.isReady())
-						processingHandler.post(new ASIFgGpuProcessor(image));
+                        processingHandler.post(new ASIFgGpuProcessor(image));
                     else processingHandler.post(new ASIFgGenerator(image));
                 } else if (useGpu)  { processingHandler.post(new GpuFrameProcessor(image));
                 } else if (useSIFg) {
@@ -533,9 +540,9 @@ public class ScreenCaptureService extends Service {
                 if (errors >= 3) {
                     captureErrorCount.set(0);
                     mainHandler.post(new Runnable() { @Override public void run() {
-								Toast.makeText(ScreenCaptureService.this,
-											   "Error de captura repetido: reinicia la app", Toast.LENGTH_LONG).show();
-							}});
+                                Toast.makeText(ScreenCaptureService.this,
+                                               "Error de captura repetido: reinicia la app", Toast.LENGTH_LONG).show();
+                            }});
                 }
             }
         }
@@ -578,7 +585,7 @@ public class ScreenCaptureService extends Service {
 
                 Bitmap srcBmp = (Bitmap) bufferPool.get(bmpKey);
                 if (srcBmp == null || srcBmp.isRecycled()
-					|| srcBmp.getWidth() != sourceWidth || srcBmp.getHeight() != sourceHeight) {
+                    || srcBmp.getWidth() != sourceWidth || srcBmp.getHeight() != sourceHeight) {
                     if (srcBmp != null && !srcBmp.isRecycled()) srcBmp.recycle();
                     srcBmp = Bitmap.createBitmap(sourceWidth, sourceHeight, Bitmap.Config.ARGB_8888);
                     bufferPool.put(bmpKey, srcBmp);
@@ -713,7 +720,7 @@ public class ScreenCaptureService extends Service {
                 long   now      = System.nanoTime();
                 boolean generated = false;
                 if (prevSrc != null && prevTime != null && prevSrc.length == src.length
-					&& (now - prevTime) <= 50_000_000L) {
+                    && (now - prevTime) <= 50_000_000L) {
                     String blendKey = sifgBlendSlotA ? BufferPool.KEY_EXTRAPOLATION : BufferPool.KEY_EXTRAPOLATION_B;
                     sifgBlendSlotA  = !sifgBlendSlotA;
                     byte[] blend = (byte[]) bufferPool.get(blendKey);
@@ -757,7 +764,7 @@ public class ScreenCaptureService extends Service {
                 long   now          = System.nanoTime();
                 boolean generated = false;
                 if (lastReal != null && lastRealTime != null && lastReal.length == src.length
-					&& (now - lastRealTime) <= 60_000_000L) {
+                    && (now - lastRealTime) <= 60_000_000L) {
                     buildFlowField(lastReal, src);
                     asifgLearnCounter++;
                     byte[] synth = buildSyntheticFrame(lastReal, src);
@@ -870,9 +877,9 @@ public class ScreenCaptureService extends Service {
                     int   c0  = colIdx[x]; float tx = colW[x]; float itx = 1f - tx; int c1 = c0 + 1;
                     float i00 = itx * ity, i10 = tx * ity, i01 = itx * ty, i11 = tx * ty;
                     float fdx = asifgFlowDx[b0+c0]*i00 + asifgFlowDx[b0+c1]*i10
-						+ asifgFlowDx[b1+c0]*i01 + asifgFlowDx[b1+c1]*i11;
+                        + asifgFlowDx[b1+c0]*i01 + asifgFlowDx[b1+c1]*i11;
                     float fdy = asifgFlowDy[b0+c0]*i00 + asifgFlowDy[b0+c1]*i10
-						+ asifgFlowDy[b1+c0]*i01 + asifgFlowDy[b1+c1]*i11;
+                        + asifgFlowDy[b1+c0]*i01 + asifgFlowDy[b1+c1]*i11;
                     if (fdx > -0.5f && fdx < 0.5f && fdy > -0.5f && fdy < 0.5f) {
                         synth[di]   = (byte)(((frameA[di]   & 0xFF) + (frameB[di]   & 0xFF)) >> 1);
                         synth[di+1] = (byte)(((frameA[di+1] & 0xFF) + (frameB[di+1] & 0xFF)) >> 1);
@@ -1010,12 +1017,16 @@ public class ScreenCaptureService extends Service {
                 byte[] prevSrc = (byte[]) bufferPool.get(BufferPool.KEY_LAST_REAL_FRAME);
 
                 if (prevSrc != null && prevSrc.length == src.length) {
-                    // ── Extraer flow A→B ──────────────────────────────────────
+                    // ── Tile Freeze: avanzar historial antes de extraer flow ───
+                    gfalFreezeDetector.nextFrame();
+
+                    // ── Extraer flow A→B (saltando tiles congelados) ──────────
                     FrameUtils.gfalExtractFlow(
                         prevSrc, src,
                         sourceWidth, sourceHeight,
                         gfalSearchRadius,
-                        gfalFlowDx, gfalFlowDy);
+                        gfalFlowDx, gfalFlowDy,
+                        gfalFreezeDetector);
 
                     // ── Refinamiento neuronal (opcional) ──────────────────────
                     if (gfalNetEnabled) {
@@ -1077,11 +1088,12 @@ public class ScreenCaptureService extends Service {
         if (elapsed <= 0) return;
         int avgFps = (int)(sessionTotalFrames * 1000L / elapsed);
         String key = currentMode == MODE_PERFORMANCE ? PREF_AVG_FPS_PERFORMANCE
-			: currentMode == MODE_ASIFG       ? PREF_AVG_FPS_ASIFG
-			: currentMode == MODE_GFAL        ? PREF_AVG_FPS_GFAL
-			:                                   PREF_AVG_FPS_SIFG1;
+            : currentMode == MODE_ASIFG       ? PREF_AVG_FPS_ASIFG
+            : currentMode == MODE_GFAL        ? PREF_AVG_FPS_GFAL
+            :                                   PREF_AVG_FPS_SIFG1;
         int old = prefs.getInt(key, 0);
         prefs.edit().putInt(key, old == 0 ? avgFps : (old + avgFps) / 2).apply();
     }
 }
+
 

@@ -1,0 +1,9 @@
+# view AndroidManifest.xml #generated:47
+-keep class com.TuringSoftware.FrameGenerator.MainActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:75
+-keep class com.TuringSoftware.FrameGenerator.MainActivity$TouchForwardService { <init>(...); }
+
+# view AndroidManifest.xml #generated:69
+-keep class com.TuringSoftware.FrameGenerator.ScreenCaptureService { <init>(...); }
+

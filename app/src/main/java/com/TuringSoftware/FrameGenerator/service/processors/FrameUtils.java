@@ -2,6 +2,7 @@ package com.TuringSoftware.FrameGenerator.service.processors;
 
 import java.util.Arrays;
 import com.TuringSoftware.FrameGenerator.service.processors.GFaLFlowNet;
+import com.TuringSoftware.FrameGenerator.service.processors.TileFreezeDetector;
 
 public final class FrameUtils {
 
@@ -229,10 +230,31 @@ public final class FrameUtils {
     public static final int GFAL_COLS = 16;
     public static final int GFAL_ROWS = 7;
 
-    //Extrae el campo de movimiento por tile usando líneas de muestreo GFaL.
+    // ── GFaL — Freeze-aware flow extraction ──────────────────────────────────
+
+    /**
+     * Versión original sin freeze (compatibilidad hacia atrás).
+     * Delega a la versión con freeze pasando {@code null}.
+     */
     public static void gfalExtractFlow(byte[] frameA, byte[] frameB,
                                        int w, int h, int searchRadius,
                                        float[] outDx, float[] outDy) {
+        gfalExtractFlow(frameA, frameB, w, h, searchRadius, outDx, outDy, null);
+    }
+
+    /**
+     * Extrae el campo de movimiento por tile usando líneas de muestreo GFaL.
+     *
+     * <p><b>Mejora Tile Freeze:</b> si {@code freeze} no es null y el tile está
+     * congelado ({@link TileFreezeDetector#isFrozen}), se reutiliza el vector
+     * anterior y se salta el block-matching, ahorrando CPU.
+     *
+     * @param freeze  detector de congelamiento (puede ser {@code null} para desactivar)
+     */
+    public static void gfalExtractFlow(byte[] frameA, byte[] frameB,
+                                       int w, int h, int searchRadius,
+                                       float[] outDx, float[] outDy,
+                                       TileFreezeDetector freeze) {
         final int stride  = w * 4;
         final int lenA    = frameA.length;
         final int lenB    = frameB.length;
@@ -246,6 +268,13 @@ public final class FrameUtils {
 
             for (int col = 0; col < GFAL_COLS; col++) {
                 int tileIdx = row * GFAL_COLS + col;
+
+                // ── Tile Freeze: si no cambió en últimos N frames, reutilizar flow ──
+                if (freeze != null && freeze.isFrozen(tileIdx)) {
+                    // outDx/outDy ya tienen el vector del frame anterior → no tocar
+                    // SAD y grad quedan en sus últimos valores válidos → OK para refineFlow
+                    continue;
+                }
 
                 int cx = (col + 1) * w / (GFAL_COLS + 1);
                 if (cx > sW1) cx = sW1;
@@ -262,6 +291,7 @@ public final class FrameUtils {
                     outDy[tileIdx] = 0f;
                     gfalSadNorm [tileIdx] = 1f; // sin textura → SAD máximo conceptual
                     gfalGradNorm[tileIdx] = 0f;
+                    if (freeze != null) freeze.recordSad(tileIdx, 0);
                     continue;
                 }
 
@@ -299,6 +329,9 @@ public final class FrameUtils {
                     if (bestSAD == 0) break;
                 }
 
+                // Registrar SAD en el detector de freeze
+                if (freeze != null) freeze.recordSad(tileIdx, bestSAD == Integer.MAX_VALUE ? 9999 : bestSAD);
+
                 // Guardar métricas para gfalRefineFlow — costo cero, ya tenemos los valores
                 gfalSadNorm [tileIdx] = (bestSAD == Integer.MAX_VALUE)
                     ? 1f : Math.min(1f, bestSAD / (9f * 255f));
@@ -315,7 +348,22 @@ public final class FrameUtils {
         }
     }
 
-    //Construye el frame predicho C a partir de B extrapolando con el flow A→B.
+    // ── GFaL — Border Blending con sub-tiles ─────────────────────────────────
+
+    /**
+     * Construye el frame predicho C a partir de B extrapolando con el flow A→B.
+     *
+     * <p><b>Mejora Border Blending:</b> En lugar de un salto abrupto entre tiles
+     * vecinos, cada píxel recibe su vector de flow por interpolación bilineal entre
+     * los 4 tiles más cercanos del grid. Esto equivale a subdividir cada tile en
+     * sub-tiles y promediar los vectores con peso lineal decreciente según la
+     * distancia al centro del tile, eliminando el efecto de "bloques" visible en
+     * la imagen generada.
+     *
+     * <p>La fórmula es la misma que antes pero con coordenadas de grid centradas
+     * en los tiles (no en sus esquinas), lo que produce pesos suaves hacia los
+     * bordes y esquinas compartidas.
+     */
     public static void gfalBuildPrediction(byte[] frameB, byte[] out,
                                            float[] flowDx, float[] flowDy,
                                            int w, int h) {
@@ -324,34 +372,52 @@ public final class FrameUtils {
         final int sW1    = w - 1;
         final int sH1    = h - 1;
 
+        // Espaciado entre tiles en píxeles
+        final float tileSpacingX = (float) w  / (GFAL_COLS + 1);
+        final float tileSpacingY = (float) h  / (GFAL_ROWS + 1);
+
         for (int y = 0; y < h; y++) {
-            float gridY = (float) y * (GFAL_ROWS + 1) / h - 1f; // va de -1 a GFAL_ROWS
+            // Coordenada en espacio de tiles (0 = antes del primer tile, GFAL_ROWS = pasado el último)
+            // Centramos respecto al centro de cada tile
+            float gridY = (float) y / tileSpacingY - 1f;
             int   r0    = (int) gridY;
             float ty    = gridY - r0;
-            if (r0 < 0)            { r0 = 0; ty = 0f; }
+
+            // Clamp con suavizado en bordes extremos
+            if (r0 < 0)              { r0 = 0; ty = 0f; }
             if (r0 >= GFAL_ROWS - 1) { r0 = GFAL_ROWS - 2; ty = 1f; }
             int r1 = r0 + 1;
+
+            // ── Sub-tile blending: peso smoothstep en Y para suavizar bordes ──
+            // smoothstep(t) = t²(3-2t) — más suave que lineal en los bordes de tile
+            float ty_s = ty * ty * (3f - 2f * ty);
+            float ity_s = 1f - ty_s;
 
             int yBase = y * stride;
 
             for (int x = 0; x < w; x++) {
-                float gridX = (float) x * (GFAL_COLS + 1) / w - 1f;
+                float gridX = (float) x / tileSpacingX - 1f;
                 int   c0    = (int) gridX;
                 float tx    = gridX - c0;
-                if (c0 < 0)            { c0 = 0; tx = 0f; }
+
+                if (c0 < 0)              { c0 = 0; tx = 0f; }
                 if (c0 >= GFAL_COLS - 1) { c0 = GFAL_COLS - 2; tx = 1f; }
                 int c1 = c0 + 1;
 
-                float itx = 1f - tx, ity = 1f - ty;
+                // ── Sub-tile blending: smoothstep en X ────────────────────────
+                float tx_s  = tx * tx * (3f - 2f * tx);
+                float itx_s = 1f - tx_s;
+
                 int i00 = r0 * GFAL_COLS + c0;
                 int i10 = r0 * GFAL_COLS + c1;
                 int i01 = r1 * GFAL_COLS + c0;
                 int i11 = r1 * GFAL_COLS + c1;
 
-                float dx = flowDx[i00] * itx * ity + flowDx[i10] * tx * ity
-                         + flowDx[i01] * itx * ty  + flowDx[i11] * tx * ty;
-                float dy = flowDy[i00] * itx * ity + flowDy[i10] * tx * ity
-                         + flowDy[i01] * itx * ty  + flowDy[i11] * tx * ty;
+                // Interpolación bilineal con pesos smoothstep → transición suave
+                float dx = flowDx[i00] * itx_s * ity_s + flowDx[i10] * tx_s * ity_s
+                         + flowDx[i01] * itx_s * ty_s  + flowDx[i11] * tx_s * ty_s;
+                float dy = flowDy[i00] * itx_s * ity_s + flowDy[i10] * tx_s * ity_s
+                         + flowDy[i01] * itx_s * ty_s  + flowDy[i11] * tx_s * ty_s;
 
                 int srcX = x + (int)(dx + 0.5f);
                 int srcY = y + (int)(dy + 0.5f);

@@ -70,6 +70,7 @@ public class MainActivity extends Activity {
     private int  sourceWidth, sourceHeight;
     private int  screenDensityDpi;
     public int  topInset, bottomInset;
+    public int  physicalWidth, physicalHeight;
     private AtomicInteger currentMode = new AtomicInteger(MODE_PERFORMANCE);
 
     public float  resolutionScale   = DEFAULT_RESOLUTION_SCALE;
@@ -153,6 +154,8 @@ public class MainActivity extends Activity {
 
         DisplayMetrics metrics = getRealMetrics();
         screenDensityDpi = metrics.densityDpi;
+        physicalWidth  = metrics.widthPixels;
+        physicalHeight = metrics.heightPixels;
 
         prefManager = new PrefManager(this, prefs);
         prefManager.restorePreferences(this);
@@ -205,12 +208,14 @@ public class MainActivity extends Activity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         DisplayMetrics metrics = getRealMetrics();
+        physicalWidth  = metrics.widthPixels;
+        physicalHeight = metrics.heightPixels;
         prefManager.adjustResolutions(this, metrics);
         uiController.updateResolutionText();
         if (captureService != null && isCapturing) {
             captureService.onOrientationChanged(
                 sourceWidth, sourceHeight, targetWidth, targetHeight,
-                metrics.densityDpi, topInset, bottomInset);
+                metrics.densityDpi, topInset, bottomInset, physicalWidth, physicalHeight);
         }
     }
 
@@ -294,8 +299,9 @@ public class MainActivity extends Activity {
         if (captureService == null) return;
         syncServiceSettings();
         captureService.startCapture(resultCode, resultData,
-            sourceWidth, sourceHeight, targetWidth, targetHeight,
-            screenDensityDpi, topInset, bottomInset, captureMode);
+                                    sourceWidth, sourceHeight, targetWidth, targetHeight,
+                                    screenDensityDpi, topInset, bottomInset, captureMode,
+                                    physicalWidth, physicalHeight);
         isCapturing = true;
         uiController.onCaptureStarted();
         fpsHandler.postDelayed(fpsRunnable, 1000);
@@ -322,6 +328,7 @@ public class MainActivity extends Activity {
         captureService.setGfalGrid(gfalGridW, gfalGridH);
         captureService.setGfalNetEnabled(gfalNetEnabled);
         captureService.setGfalNetAlpha(gfalNetAlpha);
+        captureService.setCaptureMode(captureMode);
     }
 
 
@@ -402,7 +409,7 @@ public class MainActivity extends Activity {
         private void performTouch(android.view.MotionEvent event) {
             try {
                 android.accessibilityservice.GestureDescription.Builder builder =
-                        new android.accessibilityservice.GestureDescription.Builder();
+                    new android.accessibilityservice.GestureDescription.Builder();
                 int pointerCount = event.getPointerCount();
                 int action       = event.getActionMasked();
 
@@ -412,12 +419,12 @@ public class MainActivity extends Activity {
 
                     android.accessibilityservice.GestureDescription.StrokeDescription stroke;
                     if (action == android.view.MotionEvent.ACTION_UP
-                            || action == android.view.MotionEvent.ACTION_POINTER_UP) {
+                        || action == android.view.MotionEvent.ACTION_POINTER_UP) {
                         stroke = new android.accessibilityservice.GestureDescription
-                                .StrokeDescription(path, 0, 1);
+                            .StrokeDescription(path, 0, 1);
                     } else {
                         stroke = new android.accessibilityservice.GestureDescription
-                                .StrokeDescription(path, 0, 100, true);
+                            .StrokeDescription(path, 0, 100, true);
                     }
                     builder.addStroke(stroke);
                 }
@@ -428,3 +435,4 @@ public class MainActivity extends Activity {
         }
     }
 }
+
