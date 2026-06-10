@@ -363,10 +363,14 @@ public final class FrameUtils {
      * <p>La fórmula es la misma que antes pero con coordenadas de grid centradas
      * en los tiles (no en sus esquinas), lo que produce pesos suaves hacia los
      * bordes y esquinas compartidas.
+     *
+     * @param t  factor de interpolación temporal en [0,1]. Proporcional a la
+     *           magnitud del flow: si hay mucho movimiento t≈1, si hay poco t≈0.
+     *           Calcular con {@link #gfalComputeT} y modular con touchVelFactor.
      */
     public static void gfalBuildPrediction(byte[] frameB, byte[] out,
                                            float[] flowDx, float[] flowDy,
-                                           int w, int h) {
+                                           int w, int h, float t) {
         final int stride = w * 4;
         final int len    = Math.min(frameB.length, out.length);
         final int sW1    = w - 1;
@@ -415,12 +419,16 @@ public final class FrameUtils {
 
                 // Interpolación bilineal con pesos smoothstep → transición suave
                 float dx = flowDx[i00] * itx_s * ity_s + flowDx[i10] * tx_s * ity_s
-                         + flowDx[i01] * itx_s * ty_s  + flowDx[i11] * tx_s * ty_s;
+                    + flowDx[i01] * itx_s * ty_s  + flowDx[i11] * tx_s * ty_s;
                 float dy = flowDy[i00] * itx_s * ity_s + flowDy[i10] * tx_s * ity_s
-                         + flowDy[i01] * itx_s * ty_s  + flowDy[i11] * tx_s * ty_s;
+                    + flowDy[i01] * itx_s * ty_s  + flowDy[i11] * tx_s * ty_s;
 
-                int srcX = x + (int)(dx + 0.5f);
-                int srcY = y + (int)(dy + 0.5f);
+                // Backward warp con t dinámico:
+                //   - negativo: buscamos de dónde viene el píxel (backward warp)
+                //   - t: proporcional al movimiento — mucho movimiento → t alto → interpola más
+                //        poco movimiento → t bajo → interpola poco (evita artefactos)
+                int srcX = x + (int)(-dx * t + 0.5f);
+                int srcY = y + (int)(-dy * t + 0.5f);
                 if (srcX < 0) srcX = 0; else if (srcX > sW1) srcX = sW1;
                 if (srcY < 0) srcY = 0; else if (srcY > sH1) srcY = sH1;
 
@@ -435,6 +443,37 @@ public final class FrameUtils {
                 }
             }
         }
+    }
+
+    // ── GFaL — cálculo de t proporcional al movimiento ────────────────────────
+    /**
+     * Calcula el factor de interpolación temporal t ∈ [0, 1] proporcional
+     * a la magnitud media del flow.
+     *
+     * <p>Lógica: si el movimiento medio es grande, el frame predicho debe
+     * desplazarse proporcionalmente (mucho movimiento → t alto). Si hay poco
+     * movimiento, interpolar poco evita artefactos (t bajo).
+     *
+     * <p>Fórmula: {@code t = clamp(avgMag / searchRadius, 0, 1)}
+     *
+     * @param flowDx       vectores dx del campo de movimiento
+     * @param flowDy       vectores dy del campo de movimiento
+     * @param searchRadius radio de búsqueda usado en gfalExtractFlow (píxeles)
+     * @return t en [0, 1]
+     */
+    public static float gfalComputeT(float[] flowDx, float[] flowDy, int searchRadius) {
+        final int n = GFAL_COLS * GFAL_ROWS;
+        float sumMag = 0f;
+        int   count  = 0;
+        for (int i = 0; i < n; i++) {
+            float dx = flowDx[i], dy = flowDy[i];
+            if (dx == 0f && dy == 0f) continue; // tiles estáticos no contribuyen
+            sumMag += (float) Math.sqrt(dx * dx + dy * dy);
+            count++;
+        }
+        if (count == 0 || searchRadius <= 0) return 0f;
+        float t = (sumMag / count) / searchRadius;
+        return t > 1f ? 1f : t;
     }
 
     // ── GFaL — refinamiento de flow con micro red neuronal ───────────────────
@@ -469,3 +508,4 @@ public final class FrameUtils {
         }
     }
 }
+

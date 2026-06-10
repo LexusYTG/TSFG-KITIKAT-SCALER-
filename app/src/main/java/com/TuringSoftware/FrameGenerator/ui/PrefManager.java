@@ -77,6 +77,7 @@ public class PrefManager {
 
         a.topInset    = prefs.getInt(PREF_INSET_STATUS_BAR, statusFb);
         a.bottomInset = prefs.getInt(PREF_INSET_NAV_BAR,    navFb);
+        a.sideInset   = prefs.getInt(PREF_INSET_SIDE,       0);
 
         if (Build.VERSION.SDK_INT >= 28) {
             a.getWindow().getDecorView().setOnApplyWindowInsetsListener(
@@ -84,15 +85,20 @@ public class PrefManager {
                     @Override
                     public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
                         android.view.DisplayCutout cutout = insets.getDisplayCutout();
-                        int top = insets.getSystemWindowInsetTop();
-                        int nav = insets.getSystemWindowInsetBottom();
+                        int top   = insets.getSystemWindowInsetTop();
+                        int nav   = insets.getSystemWindowInsetBottom();
+                        int left  = insets.getSystemWindowInsetLeft();
+                        int right = insets.getSystemWindowInsetRight();
+                        int side  = Math.max(left, right);
                         if (cutout != null) top = Math.max(top, cutout.getSafeInsetTop());
-                        if (top > 0 || nav > 0) {
+                        if (top > 0 || nav > 0 || side > 0) {
                             a.topInset    = top;
                             a.bottomInset = nav;
+                            a.sideInset   = side;
                             prefs.edit()
                                 .putInt(PREF_INSET_STATUS_BAR, top)
                                 .putInt(PREF_INSET_NAV_BAR,    nav)
+                                .putInt(PREF_INSET_SIDE,       side)
                                 .apply();
                         }
                         return insets;
@@ -129,6 +135,7 @@ public class PrefManager {
         int shortSide = Math.min(metrics.widthPixels, metrics.heightPixels);
         int longSide  = Math.max(metrics.widthPixels, metrics.heightPixels);
         int botInset  = a.bottomInset;
+        int sideInset = a.sideInset;
 
         float[] scales        = {0.25f, 0.5f, 0.75f};
         String[] portraitKeys  = {PREF_RES_CACHE_P25, PREF_RES_CACHE_P50, PREF_RES_CACHE_P75};
@@ -140,8 +147,8 @@ public class PrefManager {
             int sWp = Math.max(8, ((int)(tWp*scales[i]))/8*8);
             int sHp = Math.max(8, ((int)(tHp*scales[i]))/8*8);
             ed.putString(portraitKeys[i], tWp+":"+tHp+":"+sWp+":"+sHp);
-            int tWl = (longSide/8)*8;
-            int tHl = Math.max(8, ((shortSide - botInset)/8)*8);
+            int tWl = Math.max(8, ((longSide - sideInset)/8)*8);
+            int tHl = (shortSide/8)*8;
             int sWl = Math.max(8, ((int)(tWl*scales[i]))/8*8);
             int sHl = Math.max(8, ((int)(tHl*scales[i]))/8*8);
             ed.putString(landscapeKeys[i], tWl+":"+tHl+":"+sWl+":"+sHl);
@@ -149,9 +156,11 @@ public class PrefManager {
         ed.apply();
 
         boolean landscape = metrics.widthPixels > metrics.heightPixels;
-        int tW = landscape ? (longSide/8)*8 : (shortSide/8)*8;
+        int tW = landscape
+            ? Math.max(8, ((longSide  - sideInset)/8)*8)
+            : (shortSide/8)*8;
         int tH = landscape
-            ? Math.max(8, ((shortSide - botInset)/8)*8)
+            ? (shortSide/8)*8
             : Math.max(8, ((longSide  - botInset)/8)*8);
         a.setTargetWidth(tW);
         a.setTargetHeight(tH);

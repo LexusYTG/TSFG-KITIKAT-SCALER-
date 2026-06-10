@@ -172,6 +172,31 @@ public class ScreenCaptureService extends Service {
     private final float[] gfalNetHidden = new float[GFaLFlowNet.H];
     private final float[] gfalNetDelta  = new float[GFaLFlowNet.OUT];
 
+    // ── GFaL — Touch velocity tracker ────────────────────────────────────────
+    // Sin touch: touchVelFactor = 1.0 → t = flowT puro, generación normal.
+    // Con touch moviéndose rápido: sube a [1..2] amplificando la extrapolación.
+    // Al soltar: decae multiplicando por TOUCH_DECAY cada frame hasta 1.0.
+    private static final float TOUCH_DECAY = 0.85f;
+    private volatile float   touchVelFactor = 1f;
+    private volatile boolean touchActive    = false;
+
+    public void reportTouchVelocity(float velPxPerFrame) {
+        touchActive = true;
+        float sr = gfalSearchRadius;
+        if (sr <= 0f) { touchVelFactor = 1f; return; }
+        float boost = velPxPerFrame / sr;
+        touchVelFactor = 1f + (boost > 1f ? 1f : (boost < 0f ? 0f : boost));
+    }
+
+    public void reportTouchStopped() { touchActive = false; }
+
+    private void stepTouchDecay() {
+        if (!touchActive && touchVelFactor > 1f) {
+            float next = touchVelFactor * TOUCH_DECAY;
+            touchVelFactor = next < 1f ? 1f : next;
+        }
+    }
+
     // ── Render pool ───────────────────────────────────────────────────────────
     private static final int RENDER_POOL_SIZE = 8;
     private final FrameRenderRunnable[] renderPool = new FrameRenderRunnable[RENDER_POOL_SIZE];
@@ -344,19 +369,30 @@ public class ScreenCaptureService extends Service {
         surfaceRenderer.setFisheyeCorrection(fisheyeCorrection);
         surfaceRenderer.setCaptureMode(captureMode);
         surfaceRenderer.setInsets(top, bottom);
+        surfaceRenderer.setPhysicalSize(physW, physH);
 
         if (useGpu) {
             if (rsPipeline == null) rsPipeline = new RenderScriptPipeline(this);
             rsPipeline.init(srcW, srcH, tgtW, tgtH);
         }
 
-        overlayWindow = new OverlayWindow(this, physW, physH, touchForwardEnabled);
+        overlayWindow = new OverlayWindow(this, tgtW, tgtH, physW, physH, touchForwardEnabled);
         overlayWindow.setListener(new OverlayWindow.SurfaceStateListener() {
                 @Override public void onSurfaceValid(SurfaceHolder h) {
                     if (surfaceRenderer != null) surfaceRenderer.setSurfaceView(overlayWindow.getSurfaceView(), true);
                 }
                 @Override public void onSurfaceInvalid() {
                     if (surfaceRenderer != null) surfaceRenderer.setSurfaceValid(false);
+                }
+            });
+        overlayWindow.setVelocityListener(new OverlayWindow.VelocityListener() {
+                @Override public void onTouchVelocity(float velPxPerMs) {
+                    // Convertir px/ms → px/frame usando targetFrameNanos
+                    float msPerFrame = targetFrameNanos / 1_000_000f;
+                    reportTouchVelocity(velPxPerMs * msPerFrame);
+                }
+                @Override public void onTouchStopped() {
+                    reportTouchStopped();
                 }
             });
         ensureOverlayOnMainThread();
@@ -422,6 +458,7 @@ public class ScreenCaptureService extends Service {
         if (upscaler      != null) upscaler.precalculateMappings();
         if (surfaceRenderer != null) {
             surfaceRenderer.setInsets(top, bottom);
+            surfaceRenderer.setPhysicalSize(physW, physH);
             surfaceRenderer.invalidateFisheyeCache();
         }
         if (virtualDisplay != null) try { virtualDisplay.resize(srcW, srcH, dpi); }
@@ -1036,6 +1073,17 @@ public class ScreenCaptureService extends Service {
                             gfalNetHidden, gfalNetDelta);
                     }
 
+                    // ── Calcular t dinámico ───────────────────────────────────
+                    // flowT:    proporcional a la magnitud del movimiento detectado
+                    // dynamicT: flowT amplificado por touchVelFactor
+                    //   sin touch → touchVelFactor=1.0 → t = flowT (normal)
+                    //   touch rápido → touchVelFactor hasta 2.0 → más extrapolación
+                    //   al soltar → decae suavemente de vuelta a 1.0
+                    float flowT    = FrameUtils.gfalComputeT(gfalFlowDx, gfalFlowDy, gfalSearchRadius);
+                    float dynamicT = flowT * touchVelFactor;
+                    if (dynamicT > 1f) dynamicT = 1f;
+                    stepTouchDecay();
+
                     // ── Construir predicción C en espacio fuente ──────────────
                     String predKey = gfalSlotA
                         ? BufferPool.KEY_EXTRAPOLATION : BufferPool.KEY_EXTRAPOLATION_B;
@@ -1049,7 +1097,8 @@ public class ScreenCaptureService extends Service {
                     FrameUtils.gfalBuildPrediction(
                         src, pred,
                         gfalFlowDx, gfalFlowDy,
-                        sourceWidth, sourceHeight);
+                        sourceWidth, sourceHeight,
+                        dynamicT);
 
                     // ── Upscale y render ──────────────────────────────────────
                     byte[] up = upscaler.upscale(pred);
@@ -1095,5 +1144,6 @@ public class ScreenCaptureService extends Service {
         prefs.edit().putInt(key, old == 0 ? avgFps : (old + avgFps) / 2).apply();
     }
 }
+
 
 

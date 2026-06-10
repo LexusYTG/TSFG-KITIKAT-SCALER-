@@ -98,6 +98,7 @@ public final class AppConstants {
 
     public static final String PREF_INSET_STATUS_BAR = "inset_status_bar";  // px
     public static final String PREF_INSET_NAV_BAR    = "inset_nav_bar";     // px
+    public static final String PREF_INSET_SIDE       = "inset_side";        // px (nav bar lateral en landscape)
 
     public static final String PREF_CAPTURE_MODE     = "capture_mode";
     public static final int    CAPTURE_MODE_FULLSCREEN  = 0;

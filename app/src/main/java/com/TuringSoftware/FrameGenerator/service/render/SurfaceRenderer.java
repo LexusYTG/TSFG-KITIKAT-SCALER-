@@ -26,6 +26,7 @@ public class SurfaceRenderer {
     private final BufferPool pool;
     private final int sourceWidth, sourceHeight;
     private final int targetWidth, targetHeight;
+    private int physWidth, physHeight;
     private final Paint bitmapPaint;
 
     private SurfaceView overlayView;
@@ -68,6 +69,11 @@ public class SurfaceRenderer {
         this.isSurfaceValid = valid;
     }
     public void setSurfaceValid(boolean v) { isSurfaceValid = v; }
+    public void setPhysicalSize(int physW, int physH) {
+        this.physWidth  = physW;
+        this.physHeight = physH;
+        this.cachedDstRect = null; // invalidar caché
+    }
     public void setFisheyeCorrection(int f) { fisheyeCorrection = f; }
     public void setCaptureMode(int m)        { captureMode = m; }
     public void setInsets(int top, int bot)  { topInset = top; bottomInset = bot; }
@@ -136,9 +142,10 @@ public class SurfaceRenderer {
     }
 
     private android.graphics.Rect ensureDstRect() {
-        int dstH = targetHeight + bottomInset;
-        if (cachedDstRect == null || cachedDstRect.right != targetWidth || cachedDstRect.bottom != dstH) {
-            cachedDstRect = new android.graphics.Rect(0, 0, targetWidth, dstH);
+        int dstW = physWidth  > 0 ? physWidth  : targetWidth;
+        int dstH = physHeight > 0 ? physHeight : targetHeight;
+        if (cachedDstRect == null || cachedDstRect.right != dstW || cachedDstRect.bottom != dstH) {
+            cachedDstRect = new android.graphics.Rect(0, 0, dstW, dstH);
         }
         return cachedDstRect;
     }

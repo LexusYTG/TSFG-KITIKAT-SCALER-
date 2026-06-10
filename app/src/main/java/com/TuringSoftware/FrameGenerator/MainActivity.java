@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
     private int  targetWidth, targetHeight;
     private int  sourceWidth, sourceHeight;
     private int  screenDensityDpi;
-    public int  topInset, bottomInset;
+    public int  topInset, bottomInset, sideInset;
     public int  physicalWidth, physicalHeight;
     private AtomicInteger currentMode = new AtomicInteger(MODE_PERFORMANCE);
 
@@ -210,6 +210,7 @@ public class MainActivity extends Activity {
         DisplayMetrics metrics = getRealMetrics();
         physicalWidth  = metrics.widthPixels;
         physicalHeight = metrics.heightPixels;
+        prefManager.invalidateResolutionCache();
         prefManager.adjustResolutions(this, metrics);
         uiController.updateResolutionText();
         if (captureService != null && isCapturing) {
